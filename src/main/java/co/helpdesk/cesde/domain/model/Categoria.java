@@ -22,6 +22,27 @@ public class Categoria {
     this.activo = activo;
   }
 
+  public Categoria(
+      String nombre,
+      String descripcion) {
+
+    this.nombre = nombre;
+    this.descripcion = descripcion;
+    this.activo = true;
+  }
+
+  public void activar() {
+    this.activo = true;
+  }
+
+  public void desactivar() {
+    this.activo = false;
+  }
+
+  public boolean estaActiva() {
+    return Boolean.TRUE.equals(activo);
+  }
+
   public Long getId() {
     return id;
   }
@@ -63,5 +84,4 @@ public class Categoria {
         ", activo=" + activo +
         '}';
   }
-
 }

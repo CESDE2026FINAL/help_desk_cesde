@@ -1,9 +1,20 @@
 package co.helpdesk.cesde.domain.enums;
 
 public enum EstadoTicket {
-  ABIERTO,
-  EN_PROCESO,
-  RESUELTO,
-  CERRADO,
-  CANCELADO
+
+  ABIERTO("Abierto"),
+  EN_PROCESO("En proceso"),
+  RESUELTO("Resuelto"),
+  CERRADO("Cerrado"),
+  CANCELADO("Cancelado");
+
+  private final String descripcion;
+
+  EstadoTicket(String descripcion) {
+    this.descripcion = descripcion;
+  }
+
+  public String getDescripcion() {
+    return descripcion;
+  }
 }

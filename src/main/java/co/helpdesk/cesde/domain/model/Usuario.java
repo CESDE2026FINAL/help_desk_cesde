@@ -1,6 +1,6 @@
 package co.helpdesk.cesde.domain.model;
 
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 public class Usuario {
 
@@ -10,7 +10,7 @@ public class Usuario {
   private String password;
   private Rol rol;
   private Boolean activo;
-  private LocalDate fechaCreacion;
+  private OffsetDateTime fechaCreacion;
 
   public Usuario() {
   }
@@ -22,7 +22,7 @@ public class Usuario {
       String password,
       Rol rol,
       Boolean activo,
-      LocalDate fechaCreacion) {
+      OffsetDateTime fechaCreacion) {
 
     this.id = id;
     this.nombreCompleto = nombreCompleto;
@@ -31,6 +31,32 @@ public class Usuario {
     this.rol = rol;
     this.activo = activo;
     this.fechaCreacion = fechaCreacion;
+  }
+
+  public Usuario(
+      String nombreCompleto,
+      String email,
+      String password,
+      Rol rol) {
+
+    this.nombreCompleto = nombreCompleto;
+    this.email = email;
+    this.password = password;
+    this.rol = rol;
+    this.activo = true;
+    this.fechaCreacion = OffsetDateTime.now();
+  }
+
+  public void activar() {
+    this.activo = true;
+  }
+
+  public void desactivar() {
+    this.activo = false;
+  }
+
+  public boolean estaActivo() {
+    return Boolean.TRUE.equals(activo);
   }
 
   public Long getId() {
@@ -57,7 +83,7 @@ public class Usuario {
     return activo;
   }
 
-  public LocalDate getFechaCreacion() {
+  public OffsetDateTime getFechaCreacion() {
     return fechaCreacion;
   }
 
@@ -85,7 +111,7 @@ public class Usuario {
     this.activo = activo;
   }
 
-  public void setFechaCreacion(LocalDate fechaCreacion) {
+  public void setFechaCreacion(OffsetDateTime fechaCreacion) {
     this.fechaCreacion = fechaCreacion;
   }
 
@@ -95,11 +121,9 @@ public class Usuario {
         "id=" + id +
         ", nombreCompleto='" + nombreCompleto + '\'' +
         ", email='" + email + '\'' +
-        ", password='" + password + '\'' +
         ", rol=" + rol +
         ", activo=" + activo +
         ", fechaCreacion=" + fechaCreacion +
         '}';
   }
-
 }
