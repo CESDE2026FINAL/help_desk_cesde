@@ -48,7 +48,12 @@ public class JwtProvider {
   }
 
   public String extractEmail(String token) {
-    return extractClaims(token).getSubject();
+    return Jwts.parser()
+        .verifyWith((SecretKey) getSigningKey())
+        .build()
+        .parseSignedClaims(token)
+        .getPayload()
+        .getSubject();
   }
 
   public Claims extractClaims(String token) {
@@ -61,7 +66,11 @@ public class JwtProvider {
 
   public boolean validateToken(String token) {
     try {
-      extractClaims(token);
+      Jwts.parser()
+          .verifyWith((SecretKey) getSigningKey())
+          .build()
+          .parseClaimsJws(token);
+
       return true;
     } catch (Exception e) {
       return false;
