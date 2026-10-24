@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ public class TicketController {
   private final TicketService ticketService;
 
   @PostMapping
+  @PreAuthorize("hasAnyAuthority('USUARIO','ADIMIN')")
   public ResponseEntity<TicketResponse> crearTicket(
 
       @RequestBody
@@ -41,5 +43,19 @@ public class TicketController {
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(response);
+  }
+
+  @GetMapping("/asignados")
+  @PreAuthorize("hasAnyAuthority('SOPORTE','ADMIN')")
+  public ResponseEntity<?> obtenerAsignados() {
+
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public ResponseEntity<?> crearCategoria() {
+
+    return ResponseEntity.ok().build();
   }
 }

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtFilter;
@@ -45,9 +47,27 @@ public class SecurityConfig {
 
             .requestMatchers(
                 "/swagger-ui/**",
+                "/swagger-ui.html",
                 "/v3/api-docs/**",
                 "/auth/**")
             .permitAll()
+
+            // Administración
+            .requestMatchers("/admin/**")
+            .hasAuthority("ADMIN")
+
+            // Soporte y administración
+            .requestMatchers("/soporte/**")
+            .hasAnyAuthority(
+                "SOPORTE",
+                "ADMIN")
+
+            // Tickets
+            .requestMatchers("/tickets/**")
+            .hasAnyAuthority(
+                "USUARIO",
+                "SOPORTE",
+                "ADMIN")
 
             .anyRequest()
             .authenticated())

@@ -3,6 +3,7 @@ package co.helpdesk.cesde.infrastructure.security.service;
 import co.helpdesk.cesde.infrastructure.persistence.entity.UsuarioEntity;
 import co.helpdesk.cesde.infrastructure.persistence.repository.UsuarioJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     return User.builder()
         .username(usuario.getEmail())
         .password(usuario.getPassword())
-        .authorities(usuario.getRol().getNombre())
+        .authorities(new SimpleGrantedAuthority(
+            usuario.getRol().getNombre()))
         .build();
 
   }
