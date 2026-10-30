@@ -24,7 +24,7 @@ public class CategoriaController {
   private final CategoriaService categoriaService;
 
   @PostMapping
-  @PreAuthorize("hasAuthority('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<CategoriaResponse>
   crearCategoria(
       @Valid
@@ -40,7 +40,7 @@ public class CategoriaController {
 
   @GetMapping
   @PreAuthorize(
-      "hasAnyAuthority('ADMIN','SOPORTE','USUARIO')")
+      "hasAnyRole('ADMIN','SOPORTE','USUARIO')")
   public ResponseEntity<List<CategoriaResponse>>
   listarCategorias() {
 

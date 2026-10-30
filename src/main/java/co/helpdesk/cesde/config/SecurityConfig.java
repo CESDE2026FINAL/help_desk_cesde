@@ -49,22 +49,23 @@ public class SecurityConfig {
                 "/swagger-ui/**",
                 "/swagger-ui.html",
                 "/v3/api-docs/**",
+                "/api-docs/**",
                 "/auth/**")
             .permitAll()
 
             // Administración
             .requestMatchers("/admin/**")
-            .hasAuthority("ADMIN")
+            .hasRole("ADMIN")
 
             // Soporte y administración
             .requestMatchers("/soporte/**")
-            .hasAnyAuthority(
+            .hasAnyRole(
                 "SOPORTE",
                 "ADMIN")
 
             // Tickets
             .requestMatchers("/tickets/**")
-            .hasAnyAuthority(
+            .hasAnyRole(
                 "USUARIO",
                 "SOPORTE",
                 "ADMIN")

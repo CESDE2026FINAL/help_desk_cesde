@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
       throw new EmailDuplicadoException("El email ya existe");
     }
 
-    RolEntity rolUsuario = rolRepository.findByNombre("USUARIO").orElseThrow(() ->
+    RolEntity rolUsuario = rolRepository.findByNombre("ROLE_USUARIO").orElseThrow(() ->
         new IllegalArgumentException("El rol no existe"));
 
     UsuarioEntity usuario = new UsuarioEntity();
@@ -66,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
 
     UsuarioEntity usuarioGuardado = usuarioRepository.save(usuario);
 
-    String token = jwtProvider.generateToken(usuario.getId(), usuario.getEmail(), usuario.getRol().getNombre());
+    String token = jwtProvider.generateToken(usuarioGuardado.getId(), usuarioGuardado.getEmail(), usuarioGuardado.getRol().getNombre());
 
     return new AuthResponse(token);
   }

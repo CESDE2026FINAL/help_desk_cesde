@@ -24,7 +24,7 @@ public class TicketController {
   private final TicketService ticketService;
 
   @PostMapping
-  @PreAuthorize("hasAnyAuthority('USUARIO','ADIMIN')")
+  @PreAuthorize("hasAnyRole('USUARIO','ADMIN')")
   public ResponseEntity<TicketResponse> crearTicket(
 
       @RequestBody
@@ -52,10 +52,4 @@ public class TicketController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping
-  @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<?> crearCategoria() {
-
-    return ResponseEntity.ok().build();
-  }
 }
