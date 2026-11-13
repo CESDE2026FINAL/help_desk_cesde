@@ -1,6 +1,7 @@
 package co.helpdesk.cesde.config;
 
 import co.helpdesk.cesde.infrastructure.security.filter.JwtAuthenticationFilter;
+import co.helpdesk.cesde.infrastructure.security.handler.CustomAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,8 +20,11 @@ public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtFilter;
 
-  public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
+  private final CustomAccessDeniedHandler accessDeniedHandler;
+
+  public SecurityConfig(JwtAuthenticationFilter jwtFilter, CustomAccessDeniedHandler accessDeniedHandler) {
     this.jwtFilter = jwtFilter;
+    this.accessDeniedHandler = accessDeniedHandler;
   }
 
   @Bean
@@ -35,6 +39,8 @@ public class SecurityConfig {
       throws Exception {
 
     return http
+
+        .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler))
 
         .csrf(csrf -> csrf.disable())
 

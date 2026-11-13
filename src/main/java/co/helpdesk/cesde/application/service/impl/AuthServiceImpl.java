@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,12 @@ public class AuthServiceImpl implements AuthService {
         new UsernamePasswordAuthenticationToken(request.email(), request.password())
     );
 
-    UsuarioEntity usuario = usuarioRepository.findByEmail(request.email()).orElseThrow();
+    UsuarioEntity usuario = usuarioRepository
+        .findByEmailAndActivoTrue(
+            request.email())
+        .orElseThrow(() ->
+            new UsernameNotFoundException(
+                "Usuario no encontrado o inactivo"));
 
     String token = jwtProvider.generateToken(usuario.getId(), usuario.getEmail(), usuario.getRol().getNombre());
 

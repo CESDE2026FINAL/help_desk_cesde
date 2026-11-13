@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import co.helpdesk.cesde.domain.exception.ApiError;
 import co.helpdesk.cesde.domain.exception.CategoriaDuplicadaException;
 import co.helpdesk.cesde.domain.exception.EmailDuplicadoException;
+import co.helpdesk.cesde.domain.exception.UsuarioNoEncontradoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,6 +43,24 @@ public class GlobalExceptionHandler {
 
     return ResponseEntity
         .status(HttpStatus.CONFLICT)
+        .body(error);
+  }
+
+  @ExceptionHandler(
+      UsuarioNoEncontradoException.class)
+  public ResponseEntity<ApiError>
+  handleUsuarioNoEncontrado(
+      UsuarioNoEncontradoException ex) {
+
+    ApiError error = new ApiError(
+        HttpStatus.NOT_FOUND.value(),
+        "USUARIO_NO_ENCONTRADO",
+        ex.getMessage(),
+        OffsetDateTime.now()
+    );
+
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
         .body(error);
   }
 }

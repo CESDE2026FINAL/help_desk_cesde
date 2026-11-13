@@ -4,5 +4,5 @@ import co.helpdesk.cesde.domain.model.Usuario;
 
 public interface IdentityProvider {
 
-  Usuario authenticate(String username, String passwor);
+  Usuario authenticate(String username, String password);
 }
