@@ -1,7 +1,7 @@
 package co.helpdesk.cesde.application.dto.ticket;
 
-import co.helpdesk.cesde.domain.enums.EstadoTicket;
-import co.helpdesk.cesde.domain.enums.Prioridad;
+import co.helpdesk.cesde.domain.enums.TicketStatus;
+import co.helpdesk.cesde.domain.enums.Priority;
 
 public record TicketResponse(
 
@@ -13,9 +13,9 @@ public record TicketResponse(
 
     String descripcion,
 
-    Prioridad prioridad,
+    Priority priority,
 
-    EstadoTicket estado,
+    TicketStatus estado,
 
     String categoria,
 

@@ -1,9 +1,9 @@
 package co.helpdesk.cesde.domain.exception;
 
-public class CategoriaDuplicadaException
+public class DuplicateCategoryException
     extends RuntimeException {
 
-  public CategoriaDuplicadaException(
+  public DuplicateCategoryException(
       String nombre) {
 
     super("La categoría ya existe: " + nombre);

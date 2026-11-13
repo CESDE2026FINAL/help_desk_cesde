@@ -31,15 +31,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       HttpServletResponse response,
       FilterChain filterChain)
       throws ServletException, IOException {
+    System.out.println(
+        "URI = " + request.getRequestURI());
+    System.out.println("JWT FILTER EJECUTADO");
 
     String token = getTokenFromRequest(request);
+    System.out.println("TOKEN: " + token);
+
+    if (token != null) {
+      System.out.println("VALID TOKEN = "
+          + jwtProvider.validateToken(token));
+    }
 
     if (token != null && jwtProvider.validateToken(token)) {
       String email = jwtProvider.extractEmail(token);
+      System.out.println("EMAIL: " + email);
 
       UserDetails userDetails =
           userDetailsService
               .loadUserByUsername(email);
+      System.out.println("AUTHORITIES: " +
+          userDetails.getAuthorities());
 
       UsernamePasswordAuthenticationToken authentication =
           new UsernamePasswordAuthenticationToken(
@@ -60,6 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private String getTokenFromRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
+    System.out.println("AUTH HEADER = " + bearerToken);
 
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
       return bearerToken.substring(7);

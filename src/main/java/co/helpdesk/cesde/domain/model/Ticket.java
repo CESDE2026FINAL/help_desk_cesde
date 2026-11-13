@@ -2,8 +2,8 @@ package co.helpdesk.cesde.domain.model;
 
 import java.time.OffsetDateTime;
 
-import co.helpdesk.cesde.domain.enums.EstadoTicket;
-import co.helpdesk.cesde.domain.enums.Prioridad;
+import co.helpdesk.cesde.domain.enums.TicketStatus;
+import co.helpdesk.cesde.domain.enums.Priority;
 
 public class Ticket {
 
@@ -12,13 +12,13 @@ public class Ticket {
   private String titulo;
   private String descripcion;
 
-  private Prioridad prioridad;
-  private EstadoTicket estado;
+  private Priority prioridad;
+  private TicketStatus estado;
 
-  private Categoria categoria;
+  private Category category;
 
-  private Usuario solicitante;
-  private Usuario agente;
+  private User solicitante;
+  private User agente;
 
   private OffsetDateTime fechaCreacion;
   private OffsetDateTime fechaActualizacion;
@@ -31,35 +31,35 @@ public class Ticket {
       String codigo,
       String titulo,
       String descripcion,
-      Prioridad prioridad,
-      Categoria categoria,
-      Usuario solicitante) {
+      Priority prioridad,
+      Category category,
+      User solicitante) {
 
     this.codigo = codigo;
     this.titulo = titulo;
     this.descripcion = descripcion;
     this.prioridad = prioridad;
-    this.categoria = categoria;
+    this.category = category;
     this.solicitante = solicitante;
-    this.estado = EstadoTicket.ABIERTO;
+    this.estado = TicketStatus.ABIERTO;
     this.fechaCreacion = OffsetDateTime.now();
   }
 
-  public void asignarAgente(Usuario agente) {
+  public void asignarAgente(User agente) {
     this.agente = agente;
   }
 
   public void cerrar() {
-    this.estado = EstadoTicket.CERRADO;
+    this.estado = TicketStatus.CERRADO;
     this.fechaCierre = OffsetDateTime.now();
   }
 
-  public void actualizarEstado(EstadoTicket estado) {
+  public void actualizarEstado(TicketStatus estado) {
     this.estado = estado;
   }
 
-  public void actualizarPrioridad(Prioridad prioridad) {
-    this.prioridad = prioridad;
+  public void actualizarPrioridad(Priority priority) {
+    this.prioridad = priority;
   }
 
   // getters y setters
@@ -97,43 +97,43 @@ public class Ticket {
     this.descripcion = descripcion;
   }
 
-  public Prioridad getPrioridad() {
+  public Priority getPrioridad() {
     return prioridad;
   }
 
-  public void setPrioridad(Prioridad prioridad) {
-    this.prioridad = prioridad;
+  public void setPrioridad(Priority priority) {
+    this.prioridad = priority;
   }
 
-  public EstadoTicket getEstado() {
+  public TicketStatus getEstado() {
     return estado;
   }
 
-  public void setEstado(EstadoTicket estado) {
+  public void setEstado(TicketStatus estado) {
     this.estado = estado;
   }
 
-  public Categoria getCategoria() {
-    return categoria;
+  public Category getCategoria() {
+    return category;
   }
 
-  public void setCategoria(Categoria categoria) {
-    this.categoria = categoria;
+  public void setCategoria(Category category) {
+    this.category = category;
   }
 
-  public Usuario getSolicitante() {
+  public User getSolicitante() {
     return solicitante;
   }
 
-  public void setSolicitante(Usuario solicitante) {
+  public void setSolicitante(User solicitante) {
     this.solicitante = solicitante;
   }
 
-  public Usuario getAgente() {
+  public User getAgente() {
     return agente;
   }
 
-  public void setAgente(Usuario agente) {
+  public void setAgente(User agente) {
     this.agente = agente;
   }
 
@@ -170,7 +170,7 @@ public class Ticket {
         ", descripcion='" + descripcion + '\'' +
         ", prioridad=" + prioridad +
         ", estado=" + estado +
-        ", categoria=" + categoria +
+        ", categoria=" + category +
         ", solicitante=" + solicitante +
         ", agente=" + agente +
         ", fechaCreacion=" + fechaCreacion +

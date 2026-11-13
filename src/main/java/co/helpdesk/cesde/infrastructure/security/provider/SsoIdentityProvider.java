@@ -3,14 +3,14 @@ package co.helpdesk.cesde.infrastructure.security.provider;
 import org.springframework.stereotype.Component;
 
 import co.helpdesk.cesde.application.service.auth.IdentityProvider;
-import co.helpdesk.cesde.domain.model.Usuario;
+import co.helpdesk.cesde.domain.model.User;
 
 @Component
 public class SsoIdentityProvider
     implements IdentityProvider {
 
   @Override
-  public Usuario authenticate(
+  public User authenticate(
       String username,
       String password) {
 

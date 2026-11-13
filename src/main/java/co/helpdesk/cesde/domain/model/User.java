@@ -2,25 +2,25 @@ package co.helpdesk.cesde.domain.model;
 
 import java.time.OffsetDateTime;
 
-public class Usuario {
+public class User {
 
   private Long id;
   private String nombreCompleto;
   private String email;
   private String password;
-  private Rol rol;
+  private Role rol;
   private Boolean activo;
   private OffsetDateTime fechaCreacion;
 
-  public Usuario() {
+  public User() {
   }
 
-  public Usuario(
+  public User(
       Long id,
       String nombreCompleto,
       String email,
       String password,
-      Rol rol,
+      Role rol,
       Boolean activo,
       OffsetDateTime fechaCreacion) {
 
@@ -33,11 +33,11 @@ public class Usuario {
     this.fechaCreacion = fechaCreacion;
   }
 
-  public Usuario(
+  public User(
       String nombreCompleto,
       String email,
       String password,
-      Rol rol) {
+      Role rol) {
 
     this.nombreCompleto = nombreCompleto;
     this.email = email;
@@ -75,7 +75,7 @@ public class Usuario {
     return password;
   }
 
-  public Rol getRol() {
+  public Role getRol() {
     return rol;
   }
 
@@ -103,7 +103,7 @@ public class Usuario {
     this.password = password;
   }
 
-  public void setRol(Rol rol) {
+  public void setRol(Role rol) {
     this.rol = rol;
   }
 

@@ -1,6 +1,6 @@
 package co.helpdesk.cesde.domain.enums;
 
-public enum EstadoTicket {
+public enum TicketStatus {
 
   ABIERTO("Abierto"),
   EN_PROCESO("En proceso"),
@@ -10,7 +10,7 @@ public enum EstadoTicket {
 
   private final String descripcion;
 
-  EstadoTicket(String descripcion) {
+  TicketStatus(String descripcion) {
     this.descripcion = descripcion;
   }
 

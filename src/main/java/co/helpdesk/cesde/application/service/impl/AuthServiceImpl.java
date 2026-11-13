@@ -4,11 +4,11 @@ import co.helpdesk.cesde.application.dto.auth.AuthResponse;
 import co.helpdesk.cesde.application.dto.auth.LoginRequest;
 import co.helpdesk.cesde.application.dto.auth.RegisterRequest;
 import co.helpdesk.cesde.application.service.AuthService;
-import co.helpdesk.cesde.domain.exception.EmailDuplicadoException;
-import co.helpdesk.cesde.infrastructure.persistence.entity.RolEntity;
-import co.helpdesk.cesde.infrastructure.persistence.entity.UsuarioEntity;
-import co.helpdesk.cesde.infrastructure.persistence.repository.RolJpaRepository;
-import co.helpdesk.cesde.infrastructure.persistence.repository.UsuarioJpaRepository;
+import co.helpdesk.cesde.domain.exception.DuplicateEmailException;
+import co.helpdesk.cesde.infrastructure.persistence.entity.RoleEntity;
+import co.helpdesk.cesde.infrastructure.persistence.entity.UserEntity;
+import co.helpdesk.cesde.infrastructure.persistence.repository.RoleJpaRepository;
+import co.helpdesk.cesde.infrastructure.persistence.repository.UserJpaRepository;
 import co.helpdesk.cesde.infrastructure.security.jwt.JwtProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +27,9 @@ public class AuthServiceImpl implements AuthService {
 
   private final AuthenticationManager authenticationManager;
 
-  private final UsuarioJpaRepository usuarioRepository;
+  private final UserJpaRepository usuarioRepository;
 
-  private final RolJpaRepository rolRepository;
+  private final RoleJpaRepository rolRepository;
 
   private final JwtProvider jwtProvider;
 
@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         new UsernamePasswordAuthenticationToken(request.email(), request.password())
     );
 
-    UsuarioEntity usuario = usuarioRepository
+    UserEntity usuario = usuarioRepository
         .findByEmailAndActivoTrue(
             request.email())
         .orElseThrow(() ->
@@ -55,13 +55,13 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   public AuthResponse register(RegisterRequest request) {
     if (usuarioRepository.findByEmail(request.email()).isPresent()) {
-      throw new EmailDuplicadoException("El email ya existe");
+      throw new DuplicateEmailException("El email ya existe");
     }
 
-    RolEntity rolUsuario = rolRepository.findByNombre("ROLE_USUARIO").orElseThrow(() ->
+    RoleEntity rolUsuario = rolRepository.findByNombre("ROLE_USUARIO").orElseThrow(() ->
         new IllegalArgumentException("El rol no existe"));
 
-    UsuarioEntity usuario = new UsuarioEntity();
+    UserEntity usuario = new UserEntity();
 
     usuario.setNombreCompleto(request.nombreCompleto());
     usuario.setEmail(request.email());
@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
     usuario.setPassword(passwordEncoder.encode(request.password()));
     usuario.setActivo(true);
 
-    UsuarioEntity usuarioGuardado = usuarioRepository.save(usuario);
+    UserEntity usuarioGuardado = usuarioRepository.save(usuario);
 
     String token = jwtProvider.generateToken(usuarioGuardado.getId(), usuarioGuardado.getEmail(), usuarioGuardado.getRol().getNombre());
 

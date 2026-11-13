@@ -65,14 +65,21 @@ public class JwtProvider {
   }
 
   public boolean validateToken(String token) {
+
     try {
+
       Jwts.parser()
           .verifyWith((SecretKey) getSigningKey())
           .build()
-          .parseClaimsJws(token);
+          .parseSignedClaims(token);
 
       return true;
+
     } catch (Exception e) {
+
+      System.out.println("JWT ERROR: "
+          + e.getMessage());
+
       return false;
     }
   }

@@ -1,7 +1,7 @@
 package co.helpdesk.cesde.domain.exception;
 
-public class EmailDuplicadoException extends RuntimeException {
-  public EmailDuplicadoException(String email) {
+public class DuplicateEmailException extends RuntimeException {
+  public DuplicateEmailException(String email) {
     super("Ya existe un usuario registrado con el correo: " + email);
   }
 }

@@ -2,13 +2,13 @@ package co.helpdesk.cesde.domain.model;
 
 import java.time.OffsetDateTime;
 
-public class Comentario {
+public class Comment {
 
   private Long id;
 
   private Ticket ticket;
 
-  private Usuario autor;
+  private User autor;
 
   private String contenido;
 
@@ -16,12 +16,12 @@ public class Comentario {
 
   private OffsetDateTime fechaCreacion;
 
-  public Comentario() {
+  public Comment() {
   }
 
-  public Comentario(
+  public Comment(
       Ticket ticket,
-      Usuario autor,
+      User autor,
       String contenido,
       Boolean esInterno) {
 
@@ -40,7 +40,7 @@ public class Comentario {
     return ticket;
   }
 
-  public Usuario getAutor() {
+  public User getAutor() {
     return autor;
   }
 
@@ -64,7 +64,7 @@ public class Comentario {
     this.ticket = ticket;
   }
 
-  public void setAutor(Usuario autor) {
+  public void setAutor(User autor) {
     this.autor = autor;
   }
 

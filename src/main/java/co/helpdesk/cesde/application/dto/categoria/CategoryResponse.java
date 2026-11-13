@@ -1,6 +1,6 @@
 package co.helpdesk.cesde.application.dto.categoria;
 
-public record CategoriaResponse(
+public record CategoryResponse(
 
     Long id,
 

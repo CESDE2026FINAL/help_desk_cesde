@@ -1,6 +1,6 @@
 package co.helpdesk.cesde.domain.enums;
 
-public enum Prioridad {
+public enum Priority {
 
   BAJA("Baja"),
   MEDIA("Media"),
@@ -9,7 +9,7 @@ public enum Prioridad {
 
   private final String descripcion;
 
-  Prioridad(String descripcion) {
+  Priority(String descripcion) {
     this.descripcion = descripcion;
   }
 

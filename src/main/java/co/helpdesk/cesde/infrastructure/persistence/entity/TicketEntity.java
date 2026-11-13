@@ -1,7 +1,7 @@
 package co.helpdesk.cesde.infrastructure.persistence.entity;
 
-import co.helpdesk.cesde.domain.enums.EstadoTicket;
-import co.helpdesk.cesde.domain.enums.Prioridad;
+import co.helpdesk.cesde.domain.enums.TicketStatus;
+import co.helpdesk.cesde.domain.enums.Priority;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,27 +33,27 @@ public class TicketEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Prioridad prioridad;
+  private Priority prioridad;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private EstadoTicket estado;
+  private TicketStatus estado;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "categoria_id",
       nullable = false)
-  private CategoriaEntity categoria;
+  private CategoryEntity categoria;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "usuario_id",
       nullable = false)
-  private UsuarioEntity solicitante;
+  private UserEntity solicitante;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "agente_id")
-  private UsuarioEntity agente;
+  private UserEntity agente;
 
   @Column(name = "fecha_creacion")
   private OffsetDateTime fechaCreacion;

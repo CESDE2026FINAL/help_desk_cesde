@@ -1,16 +1,16 @@
 package co.helpdesk.cesde.domain.model;
 
-public class Categoria {
+public class Category {
 
   private Long id;
   private String nombre;
   private String descripcion;
   private Boolean activo;
 
-  public Categoria() {
+  public Category() {
   }
 
-  public Categoria(
+  public Category(
       Long id,
       String nombre,
       String descripcion,
@@ -22,7 +22,7 @@ public class Categoria {
     this.activo = activo;
   }
 
-  public Categoria(
+  public Category(
       String nombre,
       String descripcion) {
 

@@ -1,7 +1,7 @@
 package co.helpdesk.cesde.infrastructure.security.service;
 
-import co.helpdesk.cesde.infrastructure.persistence.entity.UsuarioEntity;
-import co.helpdesk.cesde.infrastructure.persistence.repository.UsuarioJpaRepository;
+import co.helpdesk.cesde.infrastructure.persistence.entity.UserEntity;
+import co.helpdesk.cesde.infrastructure.persistence.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private final UsuarioJpaRepository usuarioRepository;
+  private final UserJpaRepository usuarioRepository;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    UsuarioEntity usuario = usuarioRepository
+    UserEntity usuario = usuarioRepository
         .findByEmailAndActivoTrue(email)
         .orElseThrow(()  -> new UsernameNotFoundException("Usuario no encontrado o inactivo" + email));
 

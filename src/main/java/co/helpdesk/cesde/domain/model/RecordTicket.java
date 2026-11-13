@@ -2,13 +2,13 @@ package co.helpdesk.cesde.domain.model;
 
 import java.time.OffsetDateTime;
 
-public class HistorialTicket {
+public class RecordTicket {
 
   private Long id;
 
   private Ticket ticket;
 
-  private Usuario usuario;
+  private User user;
 
   private String campoModificado;
 
@@ -18,18 +18,18 @@ public class HistorialTicket {
 
   private OffsetDateTime fechaCambio;
 
-  public HistorialTicket() {
+  public RecordTicket() {
   }
 
-  public HistorialTicket(
+  public RecordTicket(
       Ticket ticket,
-      Usuario usuario,
+      User user,
       String campoModificado,
       String valorAnterior,
       String valorNuevo) {
 
     this.ticket = ticket;
-    this.usuario = usuario;
+    this.user = user;
     this.campoModificado = campoModificado;
     this.valorAnterior = valorAnterior;
     this.valorNuevo = valorNuevo;
@@ -44,8 +44,8 @@ public class HistorialTicket {
     return ticket;
   }
 
-  public Usuario getUsuario() {
-    return usuario;
+  public User getUsuario() {
+    return user;
   }
 
   public String getCampoModificado() {
@@ -72,8 +72,8 @@ public class HistorialTicket {
     this.ticket = ticket;
   }
 
-  public void setUsuario(Usuario usuario) {
-    this.usuario = usuario;
+  public void setUsuario(User user) {
+    this.user = user;
   }
 
   public void setCampoModificado(String campoModificado) {

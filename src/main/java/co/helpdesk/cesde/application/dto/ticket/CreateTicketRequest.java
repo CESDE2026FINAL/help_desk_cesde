@@ -1,10 +1,10 @@
 package co.helpdesk.cesde.application.dto.ticket;
 
-import co.helpdesk.cesde.domain.enums.Prioridad;
+import co.helpdesk.cesde.domain.enums.Priority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record CrearTicketRequest(
+public record CreateTicketRequest(
     @NotBlank
     String titulo,
 
@@ -12,7 +12,7 @@ public record CrearTicketRequest(
     String descripcion,
 
     @NotNull
-    Prioridad prioridad,
+    Priority priority,
 
     @NotNull
     Long categoriaId

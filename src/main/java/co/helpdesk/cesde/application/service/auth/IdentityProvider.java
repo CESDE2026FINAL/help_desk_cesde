@@ -1,8 +1,8 @@
 package co.helpdesk.cesde.application.service.auth;
 
-import co.helpdesk.cesde.domain.model.Usuario;
+import co.helpdesk.cesde.domain.model.User;
 
 public interface IdentityProvider {
 
-  Usuario authenticate(String username, String password);
+  User authenticate(String username, String password);
 }

@@ -3,9 +3,9 @@ package co.helpdesk.cesde.presentation.advice;
 import java.time.OffsetDateTime;
 
 import co.helpdesk.cesde.domain.exception.ApiError;
-import co.helpdesk.cesde.domain.exception.CategoriaDuplicadaException;
-import co.helpdesk.cesde.domain.exception.EmailDuplicadoException;
-import co.helpdesk.cesde.domain.exception.UsuarioNoEncontradoException;
+import co.helpdesk.cesde.domain.exception.DuplicateCategoryException;
+import co.helpdesk.cesde.domain.exception.DuplicateEmailException;
+import co.helpdesk.cesde.domain.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(EmailDuplicadoException.class)
+  @ExceptionHandler(DuplicateEmailException.class)
   public ResponseEntity<ApiError> handleEmailDuplicado(
-      EmailDuplicadoException ex) {
+      DuplicateEmailException ex) {
 
     ApiError error = new ApiError(
         HttpStatus.CONFLICT.value(),
@@ -30,10 +30,10 @@ public class GlobalExceptionHandler {
         .body(error);
   }
 
-  @ExceptionHandler(CategoriaDuplicadaException.class)
+  @ExceptionHandler(DuplicateCategoryException.class)
   public ResponseEntity<ApiError>
   handleCategoriaDuplicada(
-      CategoriaDuplicadaException ex) {
+      DuplicateCategoryException ex) {
 
     ApiError error = new ApiError(
         409,
@@ -47,10 +47,10 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(
-      UsuarioNoEncontradoException.class)
+      UserNotFoundException.class)
   public ResponseEntity<ApiError>
   handleUsuarioNoEncontrado(
-      UsuarioNoEncontradoException ex) {
+      UserNotFoundException ex) {
 
     ApiError error = new ApiError(
         HttpStatus.NOT_FOUND.value(),

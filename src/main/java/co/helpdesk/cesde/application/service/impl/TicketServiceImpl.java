@@ -6,18 +6,18 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.helpdesk.cesde.application.dto.ticket.CrearTicketRequest;
+import co.helpdesk.cesde.application.dto.ticket.CreateTicketRequest;
 import co.helpdesk.cesde.application.dto.ticket.TicketResponse;
 import co.helpdesk.cesde.application.service.TicketService;
-import co.helpdesk.cesde.domain.enums.EstadoTicket;
-import co.helpdesk.cesde.domain.exception.CategoriaNoEncontradaException;
-import co.helpdesk.cesde.domain.exception.UsuarioNoEncontradoException;
-import co.helpdesk.cesde.infrastructure.persistence.entity.CategoriaEntity;
+import co.helpdesk.cesde.domain.enums.TicketStatus;
+import co.helpdesk.cesde.domain.exception.CategoryNotFoundException;
+import co.helpdesk.cesde.domain.exception.UserNotFoundException;
+import co.helpdesk.cesde.infrastructure.persistence.entity.CategoryEntity;
 import co.helpdesk.cesde.infrastructure.persistence.entity.TicketEntity;
-import co.helpdesk.cesde.infrastructure.persistence.entity.UsuarioEntity;
-import co.helpdesk.cesde.infrastructure.persistence.repository.CategoriaJpaRepository;
+import co.helpdesk.cesde.infrastructure.persistence.entity.UserEntity;
+import co.helpdesk.cesde.infrastructure.persistence.repository.CategoryJpaRepository;
 import co.helpdesk.cesde.infrastructure.persistence.repository.TicketJpaRepository;
-import co.helpdesk.cesde.infrastructure.persistence.repository.UsuarioJpaRepository;
+import co.helpdesk.cesde.infrastructure.persistence.repository.UserJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,27 +28,27 @@ public class TicketServiceImpl implements TicketService {
 
   private final TicketJpaRepository ticketRepository;
 
-  private final UsuarioJpaRepository usuarioRepository;
+  private final UserJpaRepository usuarioRepository;
 
-  private final CategoriaJpaRepository categoriaRepository;
+  private final CategoryJpaRepository categoriaRepository;
 
   @Override
   public TicketResponse crearTicket(
-      CrearTicketRequest request,
+      CreateTicketRequest request,
       String emailSolicitante) {
 
-    UsuarioEntity usuario =
+    UserEntity usuario =
         usuarioRepository
             .findByEmail(emailSolicitante)
             .orElseThrow(() ->
-                new UsuarioNoEncontradoException(
+                new UserNotFoundException(
                     emailSolicitante));
 
-    CategoriaEntity categoria =
+    CategoryEntity categoria =
         categoriaRepository
             .findById(request.categoriaId())
             .orElseThrow(() ->
-                new CategoriaNoEncontradaException(
+                new CategoryNotFoundException(
                     request.categoriaId()));
 
     TicketEntity ticket = new TicketEntity();
@@ -59,9 +59,9 @@ public class TicketServiceImpl implements TicketService {
 
     ticket.setDescripcion(request.descripcion());
 
-    ticket.setPrioridad(request.prioridad());
+    ticket.setPrioridad(request.priority());
 
-    ticket.setEstado(EstadoTicket.ABIERTO);
+    ticket.setEstado(TicketStatus.ABIERTO);
 
     ticket.setCategoria(categoria);
 

@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "usuarios")
-public class UsuarioEntity {
+public class UserEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class UsuarioEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "rol_id")
-  private RolEntity rol;
+  private RoleEntity rol;
 
   private Boolean activo;
 
@@ -60,11 +60,11 @@ public class UsuarioEntity {
     this.password = password;
   }
 
-  public RolEntity getRol() {
+  public RoleEntity getRol() {
     return rol;
   }
 
-  public void setRol(RolEntity rol) {
+  public void setRol(RoleEntity rol) {
     this.rol = rol;
   }
 

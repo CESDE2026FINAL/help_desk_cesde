@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import co.helpdesk.cesde.application.dto.ticket.CrearTicketRequest;
+import co.helpdesk.cesde.application.dto.ticket.CreateTicketRequest;
 import co.helpdesk.cesde.application.dto.ticket.TicketResponse;
 import co.helpdesk.cesde.application.service.TicketService;
 
@@ -28,7 +28,7 @@ public class TicketController {
   public ResponseEntity<TicketResponse> crearTicket(
 
       @RequestBody
-      CrearTicketRequest request,
+      CreateTicketRequest request,
 
       Authentication authentication) {
 

@@ -5,13 +5,13 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import co.helpdesk.cesde.infrastructure.persistence.entity.CategoriaEntity;
+import co.helpdesk.cesde.infrastructure.persistence.entity.CategoryEntity;
 
 @Repository
-public interface CategoriaJpaRepository
-    extends JpaRepository<CategoriaEntity, Long> {
+public interface CategoryJpaRepository
+    extends JpaRepository<CategoryEntity, Long> {
 
-  Optional<CategoriaEntity> findByNombre(String nombre);
+  Optional<CategoryEntity> findByNombre(String nombre);
 
   boolean existsByNombre(String nombre);
 

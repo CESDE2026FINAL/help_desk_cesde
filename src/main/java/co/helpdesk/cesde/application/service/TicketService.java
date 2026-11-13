@@ -1,12 +1,12 @@
 package co.helpdesk.cesde.application.service;
 
-import co.helpdesk.cesde.application.dto.ticket.CrearTicketRequest;
+import co.helpdesk.cesde.application.dto.ticket.CreateTicketRequest;
 import co.helpdesk.cesde.application.dto.ticket.TicketResponse;
 
 public interface TicketService {
 
   TicketResponse crearTicket (
-      CrearTicketRequest request,
+      CreateTicketRequest request,
       String emailUsuario);
 
 }

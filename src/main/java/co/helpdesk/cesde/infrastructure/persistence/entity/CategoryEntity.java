@@ -8,7 +8,7 @@ import jakarta.persistence.*;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = "nombre")
     })
-public class CategoriaEntity {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class CategoriaEntity {
     @Column(nullable = false)
     private Boolean activo = true;
 
-    public CategoriaEntity() {
+    public CategoryEntity() {
     }
 
     // getters y setters

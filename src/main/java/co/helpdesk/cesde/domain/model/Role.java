@@ -1,14 +1,14 @@
 package co.helpdesk.cesde.domain.model;
 
-public class Rol {
+public class Role {
   private Long id;
   private String nombre;
   private String descripcion;
 
-  public Rol() {
+  public Role() {
   }
 
-  public Rol(Long id, String nombre, String descripcion) {
+  public Role(Long id, String nombre, String descripcion) {
     this.id = id;
     this.nombre = nombre;
     this.descripcion = descripcion;
