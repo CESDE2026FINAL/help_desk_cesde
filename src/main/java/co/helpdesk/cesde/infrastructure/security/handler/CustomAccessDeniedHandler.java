@@ -3,8 +3,6 @@ package co.helpdesk.cesde.infrastructure.security.handler;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,9 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAccessDeniedHandler
     implements AccessDeniedHandler {
-
-  private final ObjectMapper objectMapper =
-      new ObjectMapper();
 
   @Override
   public void handle(
@@ -34,21 +29,17 @@ public class CustomAccessDeniedHandler
     response.setContentType(
         "application/json");
 
-    ErrorResponse error =
-        new ErrorResponse(
-            403,
-            "ACCESS_DENIED",
-            "No tiene permisos para realizar esta operación",
-            OffsetDateTime.now());
+    String json =
+        """
+        {
+          "status": 403,
+          "error": "ACCESS_DENIED",
+          "message": "No tiene permisos para realizar esta operación",
+          "timestamp": "%s"
+        }
+        """
+            .formatted(OffsetDateTime.now());
 
-    response.getWriter().write(
-        objectMapper.writeValueAsString(error));
-  }
-
-  private record ErrorResponse(
-      int status,
-      String error,
-      String message,
-      OffsetDateTime timestamp) {
+    response.getWriter().write(json);
   }
 }

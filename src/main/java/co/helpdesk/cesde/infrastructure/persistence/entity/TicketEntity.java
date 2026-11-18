@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
 
@@ -32,11 +34,19 @@ public class TicketEntity {
   private String descripcion;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Column(
+      name = "prioridad",
+      nullable = false,
+      columnDefinition = "prioridad_enum")
   private Priority prioridad;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Column(
+      name = "estado",
+      nullable = false,
+      columnDefinition = "estado_ticket_enum"   )
   private TicketStatus estado;
 
   @ManyToOne(fetch = FetchType.LAZY)

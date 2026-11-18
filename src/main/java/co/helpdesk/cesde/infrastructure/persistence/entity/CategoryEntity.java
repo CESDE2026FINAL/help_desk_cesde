@@ -25,6 +25,13 @@ public class CategoryEntity {
     @Column(nullable = false)
     private Boolean activo = true;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "usuario_soporte_id",
+        foreignKey = @ForeignKey(
+            name = "fk_categoria_soporte"))
+    private UserEntity usuarioSoporte;
+
     public CategoryEntity() {
     }
 
@@ -60,5 +67,12 @@ public class CategoryEntity {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public UserEntity getUsuarioSoporte() {
+        return usuarioSoporte;
+    }
+    public void setUsuarioSoporte(UserEntity usuarioSoporte) {
+        this.usuarioSoporte = usuarioSoporte;
     }
 }

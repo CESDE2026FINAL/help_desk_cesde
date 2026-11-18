@@ -15,6 +15,8 @@ import co.helpdesk.cesde.application.dto.ticket.CreateTicketRequest;
 import co.helpdesk.cesde.application.dto.ticket.TicketResponse;
 import co.helpdesk.cesde.application.service.TicketService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tickets")
 @RequiredArgsConstructor
@@ -26,11 +28,11 @@ public class TicketController {
   @PostMapping
   @PreAuthorize("hasAnyRole('USUARIO','ADMIN')")
   public ResponseEntity<TicketResponse> crearTicket(
-
       @RequestBody
       CreateTicketRequest request,
-
       Authentication authentication) {
+
+    System.out.println("Creando Ticket:");
 
     String email =
         authentication.getName();
@@ -45,11 +47,71 @@ public class TicketController {
         .body(response);
   }
 
-  @GetMapping("/asignados")
-  @PreAuthorize("hasAnyAuthority('SOPORTE','ADMIN')")
-  public ResponseEntity<?> obtenerAsignados() {
-
+  @GetMapping("/asignados/total")
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  public ResponseEntity<?> obtenerAsignadosTotal() {
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/asignados")
+  @PreAuthorize("hasAnyRole('SOPORTE','ADMIN')")
+  public ResponseEntity<List<TicketResponse>>
+  obtenerAsignados(
+      Authentication authentication) {
+
+    String email =
+        authentication.getName();
+
+    return ResponseEntity.ok(
+        ticketService
+            .obtenerTicketsAsignados(
+                email));
+  }
+
+  @GetMapping("/debug")
+  public ResponseEntity<?> debug(Authentication authentication) {
+
+    return ResponseEntity.ok(
+        authentication.getAuthorities());
+  }
+
+  @PatchMapping("/{id}/iniciar")
+  @PreAuthorize("hasAnyRole('SOPORTE','ADMIN')")
+  public ResponseEntity<TicketResponse>
+  iniciarTicket(
+      @PathVariable Long id,
+      Authentication authentication) {
+
+    return ResponseEntity.ok(
+        ticketService.iniciarTicket(
+            id,
+            authentication.getName()));
+  }
+
+  @PatchMapping("/{id}/resolver")
+  @PreAuthorize("hasAnyRole('SOPORTE','ADMIN')")
+  public ResponseEntity<TicketResponse>
+  resolver(
+      @PathVariable Long id,
+      Authentication authentication) {
+
+    return ResponseEntity.ok(
+        ticketService.resolverTicket(
+            id,
+            authentication.getName()));
+  }
+
+  @PatchMapping("/{id}/cerrar")
+  @PreAuthorize("hasAnyRole('USUARIO','ADMIN')")
+  public ResponseEntity<TicketResponse>
+  cerrar(
+      @PathVariable Long id,
+      Authentication authentication) {
+
+    return ResponseEntity.ok(
+        ticketService.cerrarTicket(
+            id,
+            authentication.getName()));
   }
 
 }

@@ -1,8 +1,15 @@
 package co.helpdesk.cesde.application.service.impl;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
+import co.helpdesk.cesde.application.service.HistorialTicketService;
+import co.helpdesk.cesde.domain.exception.TicketNotFoundException;
+import co.helpdesk.cesde.infrastructure.persistence.entity.NotificationEntity;
+import co.helpdesk.cesde.infrastructure.persistence.repository.NotificationJpaRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +35,15 @@ public class TicketServiceImpl implements TicketService {
 
   private final TicketJpaRepository ticketRepository;
 
+  private final UserJpaRepository userRepository;
+
+  private final HistorialTicketService historialTicketService;
+
   private final UserJpaRepository usuarioRepository;
 
   private final CategoryJpaRepository categoriaRepository;
+
+  private final NotificationJpaRepository notificationRepository;
 
   @Override
   public TicketResponse crearTicket(
@@ -73,8 +86,31 @@ public class TicketServiceImpl implements TicketService {
     ticket.setFechaActualizacion(
         OffsetDateTime.now());
 
+    ticket.setAgente(categoria.getUsuarioSoporte());
+
     TicketEntity guardado =
         ticketRepository.save(ticket);
+
+    NotificationEntity notification =
+        new NotificationEntity();
+
+    notification.setUsuario(
+        ticket.getAgente());
+
+    notification.setTitulo(
+        "Nuevo ticket asignado");
+
+    notification.setMensaje(
+        "Se le ha asignado el ticket "
+            + ticket.getCodigo()
+            + " - "
+            + ticket.getTitulo());
+
+    notification.setFechaCreacion(
+        LocalDateTime.now());
+
+    notificationRepository.save(
+        notification);
 
     return new TicketResponse(
         guardado.getId(),
@@ -88,6 +124,166 @@ public class TicketServiceImpl implements TicketService {
     );
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public List<TicketResponse> obtenerTicketsAsignados(
+      String email) {
+
+    UserEntity soporte =
+        usuarioRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                new UserNotFoundException(
+                    "Usuario no encontrado"));
+
+    return ticketRepository
+        .findByAgente(soporte)
+        .stream()
+        .map(ticket -> new TicketResponse(
+            ticket.getId(),
+            ticket.getCodigo(),
+            ticket.getTitulo(),
+            ticket.getDescripcion(),
+            ticket.getPrioridad(),
+            ticket.getEstado(),
+            ticket.getCategoria().getNombre(),
+            ticket.getSolicitante().getNombreCompleto()))
+        .toList();
+  }
+
+  @Override
+  @Transactional
+  public TicketResponse iniciarTicket(
+      Long ticketId,
+      String email) {
+
+    TicketEntity ticket =
+        ticketRepository
+            .findById(ticketId)
+            .orElseThrow(() ->
+                new TicketNotFoundException(
+                    "Ticket no encontrado"));
+
+    UserEntity usuario =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                new UserNotFoundException(
+                    "Usuario no encontrado"));
+
+    validarResponsable(ticket, usuario);
+
+    TicketStatus estadoAnterior =
+        ticket.getEstado();
+
+    ticket.setEstado(
+        TicketStatus.EN_PROCESO);
+
+    ticket.setFechaActualizacion(
+        OffsetDateTime.now());
+
+    ticketRepository.save(ticket);
+
+    historialTicketService
+        .registrarCambio(
+            ticket,
+            usuario,
+            "ESTADO",
+            estadoAnterior.name(),
+            TicketStatus.EN_PROCESO.name());
+
+    return toResponse(ticket);
+  }
+
+  @Override
+  @Transactional
+  public TicketResponse resolverTicket(
+      Long ticketId,
+      String email) {
+
+    TicketEntity ticket =
+        ticketRepository
+            .findById(ticketId)
+            .orElseThrow(() ->
+                new TicketNotFoundException(
+                    "Ticket no encontrado"));
+
+    UserEntity usuario =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                new UserNotFoundException(
+                    "Usuario no encontrado"));
+
+    validarResponsable(ticket, usuario);
+
+    TicketStatus estadoAnterior =
+        ticket.getEstado();
+
+    ticket.setEstado(
+        TicketStatus.RESUELTO);
+
+    ticket.setFechaActualizacion(
+        OffsetDateTime.now());
+
+    ticket.setFechaCierre(
+        OffsetDateTime.now());
+
+    ticketRepository.save(ticket);
+
+    historialTicketService
+        .registrarCambio(
+            ticket,
+            usuario,
+            "ESTADO",
+            estadoAnterior.name(),
+            TicketStatus.RESUELTO.name());
+
+    return toResponse(ticket);
+  }
+
+  @Override
+  @Transactional
+  public TicketResponse cerrarTicket(
+      Long ticketId,
+      String email) {
+
+    TicketEntity ticket =
+        ticketRepository
+            .findById(ticketId)
+            .orElseThrow(() ->
+                new TicketNotFoundException(
+                    "Ticket no encontrado"));
+
+    UserEntity usuario =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(() ->
+                new UserNotFoundException(
+                    "Usuario no encontrado"));
+
+    TicketStatus estadoAnterior =
+        ticket.getEstado();
+
+    ticket.setEstado(
+        TicketStatus.CERRADO);
+
+    ticket.setFechaActualizacion(
+        OffsetDateTime.now());
+
+    ticketRepository.save(ticket);
+
+    historialTicketService
+        .registrarCambio(
+            ticket,
+            usuario,
+            "ESTADO",
+            estadoAnterior.name(),
+            TicketStatus.CERRADO.name());
+
+    return toResponse(ticket);
+  }
+
   private String generarCodigo() {
 
     return "TCK-"
@@ -95,5 +291,44 @@ public class TicketServiceImpl implements TicketService {
         .toString()
         .substring(0, 8)
         .toUpperCase();
+  }
+
+  private void validarResponsable(
+      TicketEntity ticket,
+      UserEntity usuario) {
+
+    boolean admin =
+        usuario.getRol()
+            .getNombre()
+            .equals("ROLE_ADMIN");
+
+    boolean agenteAsignado =
+        ticket.getAgente() != null
+            && ticket.getAgente()
+            .getId()
+            .equals(usuario.getId());
+
+    if (!admin && !agenteAsignado) {
+
+      throw new AccessDeniedException(
+          "No tiene permiso para modificar este ticket");
+    }
+  }
+
+  private TicketResponse toResponse(
+      TicketEntity ticket) {
+
+    return new TicketResponse(
+        ticket.getId(),
+        ticket.getCodigo(),
+        ticket.getTitulo(),
+        ticket.getDescripcion(),
+        ticket.getPrioridad(),
+        ticket.getEstado(),
+        ticket.getCategoria()
+            .getNombre(),
+        ticket.getSolicitante()
+            .getNombreCompleto()
+    );
   }
 }
