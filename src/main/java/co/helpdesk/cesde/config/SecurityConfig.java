@@ -1,0 +1,87 @@
+package co.helpdesk.cesde.config;
+
+import co.helpdesk.cesde.infrastructure.security.filter.JwtAuthenticationFilter;
+import co.helpdesk.cesde.infrastructure.security.handler.CustomAccessDeniedHandler;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+  private final JwtAuthenticationFilter jwtFilter;
+
+  private final CustomAccessDeniedHandler accessDeniedHandler;
+
+  public SecurityConfig(JwtAuthenticationFilter jwtFilter, CustomAccessDeniedHandler accessDeniedHandler) {
+    this.jwtFilter = jwtFilter;
+    this.accessDeniedHandler = accessDeniedHandler;
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManagerBean(
+      AuthenticationConfiguration configuration
+  ) throws Exception {
+    return configuration.getAuthenticationManager();
+  }
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http)
+      throws Exception {
+
+    return http
+
+        .exceptionHandling(exception -> exception.accessDeniedHandler(accessDeniedHandler))
+
+        .csrf(csrf -> csrf.disable())
+
+        .sessionManagement(session ->
+              session.sessionCreationPolicy(
+                  SessionCreationPolicy.STATELESS
+              ))
+
+        .authorizeHttpRequests(auth -> auth
+
+            .requestMatchers(
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**",
+                "/api-docs/**",
+                "/auth/**")
+            .permitAll()
+
+            // Administración
+            .requestMatchers("/admin/**")
+            .hasRole("ADMIN")
+
+            // Soporte y administración
+            .requestMatchers("/soporte/**")
+            .hasAnyRole(
+                "SOPORTE",
+                "ADMIN")
+
+            // Tickets
+            .requestMatchers("/tickets/**")
+            .hasAnyRole(
+                "USUARIO",
+                "SOPORTE",
+                "ADMIN")
+
+            .anyRequest()
+            .authenticated())
+        .addFilterBefore(
+            jwtFilter,
+            UsernamePasswordAuthenticationFilter.class
+        )
+        .build();
+  }
+}

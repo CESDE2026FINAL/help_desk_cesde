@@ -1,0 +1,76 @@
+package co.helpdesk.cesde.infrastructure.persistence.entity;
+
+import co.helpdesk.cesde.domain.enums.TicketStatus;
+import co.helpdesk.cesde.domain.enums.Priority;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.time.OffsetDateTime;
+
+@Entity
+@Table(name = "tickets")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class TicketEntity {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(nullable = false, unique = true, length = 20)
+  private String codigo;
+
+  @Column(nullable = false, length = 150)
+  private String titulo;
+
+  @Column(nullable = false, columnDefinition = "TEXT")
+  private String descripcion;
+
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Column(
+      name = "prioridad",
+      nullable = false,
+      columnDefinition = "prioridad_enum")
+  private Priority prioridad;
+
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Column(
+      name = "estado",
+      nullable = false,
+      columnDefinition = "estado_ticket_enum"   )
+  private TicketStatus estado;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "categoria_id",
+      nullable = false)
+  private CategoryEntity categoria;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "usuario_id",
+      nullable = false)
+  private UserEntity solicitante;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "agente_id")
+  private UserEntity agente;
+
+  @Column(name = "fecha_creacion")
+  private OffsetDateTime fechaCreacion;
+
+  @Column(name = "fecha_actualizacion")
+  private OffsetDateTime fechaActualizacion;
+
+  @Column(name = "fecha_cierre")
+  private OffsetDateTime fechaCierre;
+}
