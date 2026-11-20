@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.UUID;
 
 import co.helpdesk.cesde.application.service.HistorialTicketService;
+import co.helpdesk.cesde.application.service.MailService;
 import co.helpdesk.cesde.domain.exception.TicketNotFoundException;
 import co.helpdesk.cesde.infrastructure.persistence.entity.NotificationEntity;
 import co.helpdesk.cesde.infrastructure.persistence.repository.NotificationJpaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +30,13 @@ import co.helpdesk.cesde.infrastructure.persistence.repository.UserJpaRepository
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class TicketServiceImpl implements TicketService {
+
+  private final MailService mailService;
 
   private final TicketJpaRepository ticketRepository;
 
@@ -90,6 +95,27 @@ public class TicketServiceImpl implements TicketService {
 
     TicketEntity guardado =
         ticketRepository.save(ticket);
+
+    historialTicketService
+        .registrarCambio(
+            guardado,
+            usuario,
+            "ESTADO",
+            null,
+            TicketStatus.ABIERTO.name());
+
+    try {
+
+      mailService.enviarNuevoTicket(
+          guardado);
+
+    } catch (Exception ex) {
+
+      log.error(
+          "Error enviando correo para ticket {}",
+            guardado.getCodigo(),
+          ex);
+    }
 
     NotificationEntity notification =
         new NotificationEntity();

@@ -1,6 +1,16 @@
 spring:
   application:
     name: help_desk_cesde
+  mail:
+    host: localhost
+    port: 1025
+
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
 
   datasource:
     url: jdbc:postgresql://localhost:5432/mesa_ayuda #Acá cambias el nombre de la base de datos por el tuyo
